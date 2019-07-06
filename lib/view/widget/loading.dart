@@ -4,15 +4,14 @@ import 'package:shimmer/shimmer.dart';
 class LoadingView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
+    return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
       child: Shimmer.fromColors(
         baseColor: Colors.grey[300],
         highlightColor: Colors.grey[100],
         child: Column(
           children: List.generate(
-            10,
+            15,
             (index) => Padding(
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Row(

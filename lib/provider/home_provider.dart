@@ -9,6 +9,7 @@ class HomeProvider extends ChangeNotifier {
     this.initPage();
   }
 
+  int activeTileIndex;
   bool isLoading = false;
   List<Repo> trendingRepoList = new List();
 
@@ -25,6 +26,11 @@ class HomeProvider extends ChangeNotifier {
   initPage() async {
     setLoading();
     fetchRepos(false);
+  }
+
+  setActiveTileIndex(int index){
+    activeTileIndex = index;
+    notifyListeners();
   }
 
   Future fetchRepos(bool refreshing) async {

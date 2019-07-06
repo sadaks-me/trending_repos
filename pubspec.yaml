@@ -16,6 +16,8 @@ dependencies:
   async_resource: ^0.1.4
   path_provider: ^1.1.0
   shimmer: ^1.0.0
+  pigment: ^1.0.3
+
 
 dev_dependencies:
   flutter_test:
