@@ -1,9 +1,12 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:go_jek/model/repo.dart';
+import 'package:go_jek/provider/connectivity.dart';
 import 'package:go_jek/provider/home_provider.dart';
 import 'package:provider/provider.dart';
 import 'widget/list_item.dart';
 import 'widget/loading.dart';
+import 'widget/no_connection.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -21,7 +24,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
         centerTitle: true,
-        elevation: 0.5,
+        elevation: 0.7,
         actions: <Widget>[
           IconButton(
             icon: Icon(
@@ -32,18 +35,35 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Consumer<HomeProvider>(
-          builder: (context, homeProvider, _) => homeProvider.isLoading
-              ? LoadingView()
-              : ListView.separated(
-                  itemCount: homeProvider.trendingRepoList.length,
-                  itemBuilder: (context, index) {
-                    Repo repo = homeProvider.trendingRepoList[index];
-                    return RepoListItem(repo, index);
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(height: 0.5),
-                )),
+      body: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ConnectivityProvider>(
+              builder: (_) => ConnectivityProvider()),
+          ChangeNotifierProvider<HomeProvider>(builder: (_) => HomeProvider()),
+        ],
+        child: Stack(
+          children: <Widget>[
+            Consumer<HomeProvider>(
+                builder: (context, homeProvider, _) => homeProvider.isLoading
+                    ? LoadingView()
+                    : ListView.separated(
+                        itemCount: homeProvider.trendingRepoList.length,
+                        itemBuilder: (context, index) {
+                          Repo repo = homeProvider.trendingRepoList[index];
+                          return RepoListItem(repo, index);
+                        },
+                        separatorBuilder: (BuildContext context, int index) =>
+                            Divider(height: 0.5),
+                      )),
+            Consumer<ConnectivityProvider>(
+              builder: (context, connectivity, child) =>
+                  connectivity.connectivityResult == ConnectivityResult.none
+                      ? new NoConnectionView()
+                      : new SizedBox(),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
