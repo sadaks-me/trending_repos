@@ -23,6 +23,7 @@ class HomeProvider extends ChangeNotifier {
   }
 
   initPage() async {
+    setLoading();
     fetchRepos(false);
   }
 
@@ -36,10 +37,7 @@ class HomeProvider extends ChangeNotifier {
       maxAge: Duration(minutes: 2),
       strategy: CacheStrategy.cacheFirst,
     );
-    await repos.get(forceReload: refreshing).then((fetchedRepos) {
-      trendingRepoList = fetchedRepos;
-      removeLoading();
-    });
-    notifyListeners();
+    trendingRepoList = await repos.get(forceReload: refreshing);
+    removeLoading();
   }
 }

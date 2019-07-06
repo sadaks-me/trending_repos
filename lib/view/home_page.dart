@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_jek/provider/home_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
+
+import 'widget/loading.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -25,7 +30,9 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(),
+      body: Consumer<HomeProvider>(
+          builder: (context, homeProvider, _) =>
+          homeProvider.isLoading ? LoadingView() : SizedBox()),
     );
   }
 }
