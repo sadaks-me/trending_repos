@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'view/home_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,36 +13,6 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: HomePage(title: 'Trending'),
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.black,
-            ),
-            onPressed: null,
-          ),
-        ],
-      ),
-      body: Center(),
     );
   }
 }
