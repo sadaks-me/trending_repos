@@ -41,29 +41,52 @@ class _HomePageState extends State<HomePage> {
               builder: (_) => ConnectivityProvider()),
           ChangeNotifierProvider<HomeProvider>(builder: (_) => HomeProvider()),
         ],
-        child: Stack(
-          children: <Widget>[
-            Consumer<HomeProvider>(
-                builder: (context, homeProvider, _) => homeProvider.isLoading
-                    ? LoadingView()
-                    : ListView.separated(
-                        itemCount: homeProvider.trendingRepoList.length,
-                        itemBuilder: (context, index) {
-                          Repo repo = homeProvider.trendingRepoList[index];
-                          return RepoListItem(repo, index);
-                        },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            Divider(height: 0.5),
-                      )),
-            Consumer<ConnectivityProvider>(
-              builder: (context, connectivity, child) =>
-                  connectivity.connectivityResult == ConnectivityResult.none
-                      ? new NoConnectionView()
-                      : new SizedBox(),
-            ),
-          ],
-        ),
+        child: Consumer<HomeProvider>(
+            builder: (context, homeProvider, _) => Stack(
+                  children: <Widget>[
+                    homeProvider.isLoading
+                        ? LoadingView()
+                        : RefreshIndicator(
+                            onRefresh: () => onRefresh(homeProvider),
+                            displacement: 20,
+                            color: Colors.black,
+                            child: ListView.separated(
+                              itemCount: homeProvider.trendingRepoList.length,
+                              itemBuilder: (context, index) {
+                                Repo repo =
+                                    homeProvider.trendingRepoList[index];
+                                return RepoListItem(repo, index);
+                              },
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      Divider(height: 0.5),
+                            )),
+                    if (homeProvider.repos != null)
+                      Consumer<ConnectivityProvider>(
+                        builder: (context, connectivity, child) =>
+                            FutureBuilder<bool>(
+                          initialData: false,
+                          future: homeProvider.repos.isExpired,
+                          builder: (context, snapshot) {
+                            if (snapshot.data) {
+                              return (connectivity.connectivityResult !=
+                                      ConnectivityResult.none)
+                                  ? NoConnectionView()
+                                  : SizedBox();
+                            } else
+                              return SizedBox();
+                          },
+                        ),
+                      ),
+                  ],
+                )),
       ),
     );
+  }
+
+  Future<Null> onRefresh(HomeProvider homeProvider) async {
+    homeProvider.setRefreshing(true);
+    await homeProvider.fetchRepos(true);
+    return homeProvider.completer.future.then((_) {});
   }
 }

@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import 'home_provider.dart';
 
 printIfDebug(data) {
   if (!kReleaseMode) print(data);
@@ -41,6 +44,11 @@ class ConnectivityProvider with ChangeNotifier {
 
   updateConnectionStatus(ConnectivityResult newResult) {
     connectivityResult = newResult;
+//    HomeProvider authenticationProvider =
+//    Provider.of<HomeProvider>(context);
+//    authenticationProvider.logIn(token);
+//    Provider.of<RestartProvider>(context)..restartApp();
+//    if()
     notifyListeners();
     printIfDebug('Connectivity Status:\t' + connectivityResult.toString());
   }
