@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Repo {
   String author;
   String name;
@@ -26,18 +28,23 @@ class Repo {
   });
 
   factory Repo.fromJson(Map<String, dynamic> json) => new Repo(
-    author: json["author"],
-    name: json["name"],
-    avatar: json["avatar"],
-    url: json["url"],
-    description: json["description"],
-    language: json["language"],
-    languageColor: json["languageColor"],
-    stars: json["stars"],
-    forks: json["forks"],
-    currentPeriodStars: json["currentPeriodStars"],
-    builtBy: new List<BuiltBy>.from(json["builtBy"].map((x) => BuiltBy.fromJson(x))),
-  );
+        author: json["author"],
+        name: json["name"],
+        avatar: json["avatar"],
+        url: json["url"],
+        description: json["description"],
+        language: json["language"],
+        languageColor: json["languageColor"],
+        stars: json["stars"],
+        forks: json["forks"],
+        currentPeriodStars: json["currentPeriodStars"],
+        builtBy: new List<BuiltBy>.from(
+            json["builtBy"].map((x) => BuiltBy.fromJson(x))),
+      );
+
+  static List<Repo> fromJsonArray(String jsonString) => (json.decode(jsonString) as List)
+      .map((item) => Repo.fromJson(item as Map<String, dynamic>)).toList();
+
 }
 
 class BuiltBy {
@@ -52,8 +59,8 @@ class BuiltBy {
   });
 
   factory BuiltBy.fromJson(Map<String, dynamic> json) => new BuiltBy(
-    href: json["href"],
-    avatar: json["avatar"],
-    username: json["username"],
-  );
+        href: json["href"],
+        avatar: json["avatar"],
+        username: json["username"],
+      );
 }

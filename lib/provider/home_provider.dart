@@ -31,8 +31,7 @@ class HomeProvider extends ChangeNotifier {
     final path = (await getApplicationDocumentsDirectory()).path;
     final repos = HttpNetworkResource<List<Repo>>(
       url: 'https://github-trending-api.now.sh/repositories',
-      parser: (contents) =>
-          contents.map<Repo>((item) => Repo.fromJson(item)).toList(),
+      parser: (contents) => Repo.fromJsonArray(contents),
       cache: FileResource(File('$path/repos.json')),
       maxAge: Duration(minutes: 2),
       strategy: CacheStrategy.cacheFirst,
