@@ -8,7 +8,7 @@ class NoConnectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context).copyWith();
     final TextTheme textTheme = theme.textTheme;
-    Size size = MediaQuery.of(context).size;
+
     return Container(
       color: Colors.grey.shade100,
       child: Center(
@@ -16,28 +16,32 @@ class NoConnectionView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
+                child: Center(
+              child: SingleChildScrollView(
                 child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Image.asset(
-                  'assets/images/no_connection.png',
-                  fit: BoxFit.contain,
-                  height:size.height/2,
-                  width: size.width/3,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      'assets/images/no_connection.png',
+                      fit: BoxFit.contain,
+                      height: 350,
+                      width: 250,
+                    ),
+                    Text(
+                      'Something went wrong..',
+                      style: textTheme.title,
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'An alien is probably blocking your signal.',
+                      style: textTheme.body1
+                          .copyWith(color: textTheme.caption.color),
+                    ),
+                  ],
                 ),
-                Text(
-                  'Something went wrong..',
-                  style: textTheme.title,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'An alien is probably blocking your signal.',
-                  style:
-                      textTheme.body1.copyWith(color: textTheme.caption.color),
-                ),
-              ],
+              ),
             )),
             Consumer<ConnectivityProvider>(
               builder: (context, connectivity, child) => Padding(
