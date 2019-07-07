@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_jek/provider/connectivity.dart';
+import 'package:go_jek/provider/home_provider.dart';
+import 'package:provider/provider.dart';
 
 class NoConnectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context).copyWith();
     final TextTheme textTheme = theme.textTheme;
-
+    Size size = MediaQuery.of(context).size;
     return Container(
       color: Colors.grey.shade100,
       child: Center(
@@ -19,8 +22,8 @@ class NoConnectionView extends StatelessWidget {
                 Image.asset(
                   'assets/images/no_connection.png',
                   fit: BoxFit.contain,
-                  height: 350,
-                  width: 250,
+                  height:size.height/2,
+                  width: size.width/3,
                 ),
                 Text(
                   'Something went wrong..',
@@ -36,25 +39,33 @@ class NoConnectionView extends StatelessWidget {
                 ),
               ],
             )),
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: RaisedButton(
-                onPressed: () {},
-                color: Colors.white,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    side: BorderSide(color: Colors.green)),
-                child: Container(
-                  height: 45,
-                  alignment: Alignment.center,
-                  child: Text(
-                    'RETRY',
-                    style: textTheme.button.copyWith(color: Colors.green),
+            Consumer<ConnectivityProvider>(
+              builder: (context, connectivity, child) => Padding(
+                padding: const EdgeInsets.all(15),
+                child: RaisedButton(
+                  onPressed: () {
+                    if (connectivity.hasConnection) {
+                      HomeProvider homeProvider =
+                          Provider.of<HomeProvider>(context);
+                      homeProvider.fetchRepos(true);
+                    }
+                  },
+                  color: Colors.white,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      side: BorderSide(color: Colors.green)),
+                  child: Container(
+                    height: 45,
+                    alignment: Alignment.center,
+                    child: Text(
+                      'RETRY',
+                      style: textTheme.button.copyWith(color: Colors.green),
+                    ),
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_jek/model/repo.dart';
 import 'package:go_jek/provider/home_provider.dart';
@@ -47,8 +48,8 @@ class RepoListItem extends StatelessWidget {
                           minRadius: 20,
                           maxRadius: 20,
                           backgroundColor: Colors.grey.shade50,
-                          backgroundImage:
-                              NetworkImage(checkIfNull(repo.avatar)),
+                          backgroundImage: CachedNetworkImageProvider(
+                              checkIfNull(repo.avatar)),
                         ),
                         title: AnimatedContainer(
                           duration: Duration(microseconds: 500),

@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_jek/provider/home_provider.dart';
 import 'package:provider/provider.dart';
-
-import 'home_provider.dart';
 
 printIfDebug(data) {
   if (!kReleaseMode) print(data);
@@ -14,9 +14,12 @@ class ConnectivityProvider with ChangeNotifier {
   StreamController<ConnectivityResult> connectivityController = new StreamController<ConnectivityResult>.broadcast();
   Stream<ConnectivityResult> connectionStream;
   ConnectivityResult connectivityResult;
+  bool hasConnection;
+  BuildContext context;
 
-  ConnectivityProvider() {
+  ConnectivityProvider(BuildContext context) {
     try {
+      this.context = context;
       Connectivity().checkConnectivity().then((result) {
         updateConnectionStatus(result);
       });
@@ -44,11 +47,13 @@ class ConnectivityProvider with ChangeNotifier {
 
   updateConnectionStatus(ConnectivityResult newResult) {
     connectivityResult = newResult;
-//    HomeProvider authenticationProvider =
-//    Provider.of<HomeProvider>(context);
-//    authenticationProvider.logIn(token);
-//    Provider.of<RestartProvider>(context)..restartApp();
-//    if()
+    hasConnection = connectivityResult != ConnectivityResult.none;
+    if (hasConnection) {
+      Consumer<HomeProvider>(builder: (context, homeProvider, _) {
+        homeProvider.fetchRepos(true);
+        return SizedBox();
+      });
+    }
     notifyListeners();
     printIfDebug('Connectivity Status:\t' + connectivityResult.toString());
   }

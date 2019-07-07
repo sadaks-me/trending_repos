@@ -16,7 +16,7 @@ class HomeProvider extends ChangeNotifier {
   bool isLoading = false;
   Completer completer;
   int activeTileIndex;
-  Duration maxAge = Duration(minutes: 2);
+  bool hasDataAndNotExpired;
 
   setLoading() {
     isLoading = true;
@@ -46,9 +46,10 @@ class HomeProvider extends ChangeNotifier {
       url: 'https://github-trending-api.now.sh/repositories',
       parser: (contents) => Repo.fromJsonArray(contents),
       cache: FileResource(File('$path/repos.json')),
-      maxAge: maxAge,
+      maxAge: Duration(minutes: 2),
       strategy: CacheStrategy.cacheFirst,
     );
+    hasDataAndNotExpired = repos.cache.data != null && !await repos.isExpired;
     fetchRepos(false);
   }
 
@@ -59,9 +60,9 @@ class HomeProvider extends ChangeNotifier {
 
   Future fetchRepos(bool forceReload) async {
     await repos.get(forceReload: forceReload).then((list) async {
-      if (!await repos.isExpired) trendingRepoList = list;
+      hasDataAndNotExpired = repos.cache.data != null && !await repos.isExpired;
+      if (hasDataAndNotExpired) trendingRepoList = list;
     });
-    if (repos.cache.data != null) print('HAS DATA');
     removeLoading();
     setRefreshing(false);
   }

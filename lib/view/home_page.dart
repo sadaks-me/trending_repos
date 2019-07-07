@@ -35,13 +35,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: MultiProvider(
-        providers: [
-          ChangeNotifierProvider<ConnectivityProvider>(
-              builder: (_) => ConnectivityProvider()),
-          ChangeNotifierProvider<HomeProvider>(builder: (_) => HomeProvider()),
-        ],
-        child: Consumer<HomeProvider>(
+      body: Consumer<HomeProvider>(
             builder: (context, homeProvider, _) => Stack(
                   children: <Widget>[
                     homeProvider.isLoading
@@ -64,23 +58,14 @@ class _HomePageState extends State<HomePage> {
                     if (homeProvider.repos != null)
                       Consumer<ConnectivityProvider>(
                         builder: (context, connectivity, child) =>
-                            FutureBuilder<bool>(
-                          initialData: false,
-                          future: homeProvider.repos.isExpired,
-                          builder: (context, snapshot) {
-                            if (snapshot.data) {
-                              return (connectivity.connectivityResult !=
-                                      ConnectivityResult.none)
-                                  ? NoConnectionView()
-                                  : SizedBox();
-                            } else
-                              return SizedBox();
-                          },
-                        ),
+                            connectivity.hasConnection
+                                ? SizedBox()
+                                : homeProvider.hasDataAndNotExpired
+                                    ? SizedBox()
+                                    : NoConnectionView(),
                       ),
                   ],
                 )),
-      ),
     );
   }
 
