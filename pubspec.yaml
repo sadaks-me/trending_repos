@@ -18,10 +18,14 @@ dependencies:
   shimmer: ^1.0.0
   pigment: ^1.0.3
   cached_network_image: ^1.0.0
+  mockito: ^4.1.0
+  test: any
 
 
 dev_dependencies:
   flutter_test:
+    sdk: flutter
+  flutter_driver:
     sdk: flutter
 
 
