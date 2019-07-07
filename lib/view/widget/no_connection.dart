@@ -51,6 +51,7 @@ class NoConnectionView extends StatelessWidget {
                     if (connectivity.hasConnection) {
                       HomeProvider homeProvider =
                           Provider.of<HomeProvider>(context);
+                      homeProvider.setLoading();
                       homeProvider.fetchRepos(true);
                     }
                   },

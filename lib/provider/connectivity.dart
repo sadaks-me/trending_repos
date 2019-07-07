@@ -50,6 +50,7 @@ class ConnectivityProvider with ChangeNotifier {
     hasConnection = connectivityResult != ConnectivityResult.none;
     if (hasConnection) {
       Consumer<HomeProvider>(builder: (context, homeProvider, _) {
+        homeProvider.setLoading();
         homeProvider.fetchRepos(true);
         return SizedBox();
       });
