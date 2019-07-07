@@ -46,7 +46,7 @@ class HomeProvider extends ChangeNotifier {
       url: 'https://github-trending-api.now.sh/repositories',
       parser: (contents) => Repo.fromJsonArray(contents),
       cache: FileResource(File('$path/repos.json')),
-      maxAge: Duration(minutes: 2),
+      maxAge: Duration(minutes: 60),
       strategy: CacheStrategy.cacheFirst,
     );
     hasDataAndNotExpired = repos.cache.data != null && !await repos.isExpired;
