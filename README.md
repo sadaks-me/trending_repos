@@ -1,6 +1,6 @@
-# GOJEK ASSIGNMENT
+# TRENDING REPOS
 
-GOJEK - A Flutter application for the trending github repositories.
+TRENDING REPOS - A Flutter application for the trending github repositories.
 
 ## Flutter Intro
 
